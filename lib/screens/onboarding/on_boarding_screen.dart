@@ -3,7 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
-import '../../components/animated_btn.dart';
+import 'components/animated_btn.dart';
+import 'components/custom_signin_dialog.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -13,6 +14,7 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
+  bool isSignInDialogShown = false;
   late RiveAnimationController _btnAnimationController;
 
   @override
@@ -55,52 +57,74 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               child: const SizedBox(),
             ),
           ),
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Spacer(),
-                  const SizedBox(
-                    width: 260,
-                    child: Column(
-                      children: [
-                        Text(
-                          'Learn design & code',
-                          style: TextStyle(
-                            fontSize: 60,
-                            fontFamily: 'Poppins',
-                            height: 1.2,
+          AnimatedPositioned(
+            top: isSignInDialogShown ? -60 : 0,
+            //top: -50,
+            duration: const Duration(
+              milliseconds: 240,
+            ),
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 32),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Spacer(),
+                    const SizedBox(
+                      width: 260,
+                      child: Column(
+                        children: [
+                          Text(
+                            'Learn design & code',
+                            style: TextStyle(
+                              fontSize: 60,
+                              fontFamily: 'Poppins',
+                              height: 1.2,
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 16,
-                        ),
-                        Text(
-                          "Don't skip design, learn design and code, by building real apps with flutter. complete courses about the best tools.",
-                        ),
-                      ],
+                          SizedBox(
+                            height: 16,
+                          ),
+                          Text(
+                            "Don't skip design, learn design and code, by building real apps with flutter. complete courses about the best tools.",
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  const Spacer(
-                    flex: 2,
-                  ),
-                  AnimatedBtn(
-                    btnAnimationController: _btnAnimationController,
-                    press: () {
-                      _btnAnimationController.isActive = true;
-                    },
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(
-                      vertical: 24,
+                    const Spacer(
+                      flex: 2,
                     ),
-                    child: Text(
-                      "Don't skip design, learn design and code, by building real apps with flutter. complete courses about the best tools.",
+                    AnimatedBtn(
+                      btnAnimationController: _btnAnimationController,
+                      press: () {
+                        _btnAnimationController.isActive = true;
+                        Future.delayed(const Duration(milliseconds: 800), () {
+                          setState(() {
+                            isSignInDialogShown = true;
+                          });
+                          customSignInDialog(
+                            context,
+                            onClosed: (_) {
+                              setState(() {
+                                isSignInDialogShown = false;
+                              });
+                            },
+                          );
+                        });
+                      },
                     ),
-                  ),
-                ],
+                    const Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: 24,
+                      ),
+                      child: Text(
+                        "Don't skip design, learn design and code, by building real apps with flutter. complete courses about the best tools.",
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
